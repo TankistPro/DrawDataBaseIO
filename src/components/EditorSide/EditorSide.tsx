@@ -1,5 +1,6 @@
 import * as React from "react";
 import {EditorContext} from "../../context/useEditorContext.tsx";
+import TableAccordion from "./TableAccordion/TableAccordion.tsx";
 
 function EditorSide() {
     const { addTable } = React.useContext(EditorContext);
@@ -20,6 +21,9 @@ function EditorSide() {
                 >
                     Add Table
                 </button>
+            </div>
+            <div className="mt-2">
+                <TableAccordion />
             </div>
         </div>
     );

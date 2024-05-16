@@ -1,4 +1,6 @@
 import ReactDOM from 'react-dom/client'
+import 'flowbite'
+
 import App from './App.tsx'
 import './index.css'
 

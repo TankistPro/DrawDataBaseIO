@@ -67,9 +67,9 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table }) => {
             onMouseDown={mouseDownHandler}
             ref={refForeignObject}
         >
-            <div className="w-[300px] h-max bg-white rounded-xl border-2 border-sky-200 overflow-hidden cursor-move hover:border-dashed hover:border-blue-400" ref={refTable}>
+            <div className="w-[300px] h-max bg-white rounded-xl border-2 border-sky-200 overflow-hidden cursor-move hover:border-dashed hover:border-blue-400 transition-all duration-150" ref={refTable}>
                 <div className="bg-gray-50 py-2 px-2 select-none flex justify-between">
-                    <p className="text-black font-bold text-xl">{ table.tableName } {table.id}</p>
+                    <p className="text-black font-bold text-xl">{ table.tableName }</p>
                     <div>
                         <button className="w-7 bg-red-400 rounded px-1 py-1 hover:bg-red-500" onClick={() => removeTable ? removeTable(table.id) : null}>
                             <img src={removeIcon} alt=""/>
