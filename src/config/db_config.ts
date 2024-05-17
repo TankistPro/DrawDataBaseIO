@@ -12,6 +12,8 @@ export const DB_TYPES = [
 export const createBaseTableField = (): ITableField => {
     return {
         name: "",
-        type: DB_TYPES[0]
+        type: DB_TYPES[0],
+        isNull: false,
+        pk: false
     }
 }

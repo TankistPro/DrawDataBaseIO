@@ -10,7 +10,9 @@ export interface ITable {
 
 export interface ITableField {
     name: string,
-    type: string | number
+    type: string | number,
+    isNull: boolean,
+    pk: boolean
 }
 
 export  interface IEditorContext {

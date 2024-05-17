@@ -30,6 +30,8 @@ export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ childr
         }
 
         newTables.fields[0].name = "ID";
+        newTables.fields[0].isNull = false;
+        newTables.fields[0].pk = true;
 
         setTables(prevState => ([...prevState, newTables]))
     }
