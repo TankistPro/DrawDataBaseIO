@@ -8,7 +8,7 @@ export interface ITable {
     }
 }
 
-interface ITableField {
+export interface ITableField {
     name: string,
     type: string | number
 }
@@ -17,5 +17,6 @@ export  interface IEditorContext {
     tables: ITable[],
     addTable: (() => void),
     removeTable: ((tableId: number) => void),
-    updateTablePosition: ((idTable: number, x: number, y: number) => void)
+    updateTable: ((idTable: number, tableEntity: ITable) => void),
+    addTableField: ((tableId: number) => void)
 }

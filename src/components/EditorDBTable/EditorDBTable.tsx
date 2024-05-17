@@ -11,7 +11,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table }) => {
     const refForeignObject = React.useRef<SVGForeignObjectElement>(null);
     const refTable = React.useRef<HTMLDivElement>(null);
 
-    const { removeTable, updateTablePosition } = React.useContext(EditorContext);
+    const { removeTable, updateTable } = React.useContext(EditorContext);
 
     const [computedForeignObjectHeight, setComputedForeignObjectHeight] = React.useState<number>(0);
 
@@ -22,7 +22,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table }) => {
 
     React.useEffect(() => {
         setComputedForeignObjectHeight(refTable.current!.offsetHeight + 2)
-    }, [])
+    }, [table.fields.length])
 
     const mouseDownHandler = (event: React.MouseEvent ) => {
         const rect = refForeignObject.current!.getBoundingClientRect();
@@ -52,10 +52,10 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table }) => {
     }
 
     const moveTableHandler = (event: React.MouseEvent) => {
-        const x = event.pageX - shiftOffset.shiftX;
-        const y = event.pageY - shiftOffset.shiftY;
+        table.tablePosition.x = event.pageX - shiftOffset.shiftX;
+        table.tablePosition.y = event.pageY - shiftOffset.shiftY;
 
-        updateTablePosition(table.id, x, y)
+        updateTable(table.id, table)
     }
 
     return (

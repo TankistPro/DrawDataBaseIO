@@ -1,12 +1,14 @@
 import * as React from "react";
 import { createContext, ReactElement} from "react";
 import {IEditorContext, ITable} from "../domain/domain.ts";
+import {createBaseTableField} from "../config/db_config.ts";
 
 export const EditorContext = createContext<IEditorContext>({
     tables: [],
     addTable: () => {},
     removeTable: () => {},
-    updateTablePosition: () =>{}
+    updateTable: () =>{},
+    addTableField: () => {}
 })
 
 interface IEditorContextProvider {
@@ -19,21 +21,17 @@ export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ childr
     const addTable = () => {
         const newTables: ITable = {
             id: Date.now(),
-            tableName: "Users",
-            fields:[
-                {
-                    name: "ID",
-                    type: "INT"
-                }
-            ],
+            tableName: `Table_${tables.length + 1}`,
+            fields:[createBaseTableField()],
             tablePosition: {
                 x: 50,
                 y: 50
             }
         }
 
+        newTables.fields[0].name = "ID";
+
         setTables(prevState => ([...prevState, newTables]))
-        console.log(tables)
     }
 
     const removeTable = (tableId: number) => {
@@ -41,16 +39,27 @@ export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ childr
         setTables(updatedTablesState)
     }
 
-    const updateTablePosition = (idTable: number, x: number, y: number) => {
+    const updateTable = (idTable: number, tableEntity: ITable) => {
         const indexTable = tables.findIndex((t) => t.id == idTable);
-        console.log(indexTable)
         if(indexTable != -1) {
 
-            const table = tables.splice(indexTable, 1)[0];
-            table.tablePosition.x = x;
-            table.tablePosition.y = y;
+            let table = tables[indexTable];
+            table = tableEntity
 
-            tables = [...tables, table];
+            // tables = [...tables, table];
+            tables[indexTable] = table;
+
+            setTables([...tables])
+        }
+    }
+
+    const addTableField = (idTable: number) => {
+        const indexTable = tables.findIndex((t) => t.id == idTable);
+
+        if(indexTable != -1) {
+            const table = tables[indexTable];
+
+            table.fields = [...table.fields, createBaseTableField()];
 
             setTables([...tables])
         }
@@ -64,7 +73,8 @@ export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ childr
                 tables,
                 addTable,
                 removeTable,
-                updateTablePosition
+                updateTable,
+                addTableField
             }}
         >
             { children }
