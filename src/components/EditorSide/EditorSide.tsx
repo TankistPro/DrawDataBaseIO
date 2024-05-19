@@ -1,9 +1,10 @@
 import * as React from "react";
-import {EditorContext} from "../../context/useEditorContext.tsx";
+
 import TableAccordion from "./TableAccordion/TableAccordion.tsx";
+import {TableContext} from "../../context/TableContext.tsx";
 
 function EditorSide() {
-    const { addTable, tables } = React.useContext(EditorContext);
+    const { addTable, tables } = React.useContext(TableContext);
     const [openedTableId, setOpenedTableId] = React.useState(-1);
 
     const toggleOpenedTableIdHandler = (id: number) => {

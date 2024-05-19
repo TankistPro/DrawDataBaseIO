@@ -35,15 +35,25 @@ export interface IRelation {
 }
 
 export  interface IEditorContext {
-    tables: ITable[],
-    hoveredTable: ITable | null,
+    // tables: ITable[],
+    // hoveredTable: ITable | null,
     linkingLine: ILinkingLine | null,
     relations: IRelation[] | [],
+    // addTable: (() => void),
+    // removeTable: ((tableId: number) => void),
+    // updateTable: ((idTable: number, tableEntity: ITable) => void),
+    // addTableField: ((tableId: number) => void),
+    // setHoveredHandler: ((table: ITable | null) => void),
+    setLinkingLineHandler:((table: ILinkingLine | null) => void ),
+    createRelationShip: ((linkingPayload: ILinkingLine) => void)
+}
+
+export interface ITableContext {
+    tables: ITable[],
+    hoveredTable: ITable | null,
     addTable: (() => void),
     removeTable: ((tableId: number) => void),
     updateTable: ((idTable: number, tableEntity: ITable) => void),
     addTableField: ((tableId: number) => void),
     setHoveredHandler: ((table: ITable | null) => void),
-    setLinkingLineHandler:((table: ILinkingLine | null) => void ),
-    createRelationShip: ((linkingPayload: ILinkingLine) => void)
 }

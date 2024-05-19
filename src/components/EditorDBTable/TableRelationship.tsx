@@ -1,15 +1,13 @@
-// import React from 'react';
-
 import React from "react";
 import { IRelation} from "../../domain/domain.ts";
-import {EditorContext} from "../../context/useEditorContext.tsx";
+import {TableContext} from "../../context/TableContext.tsx";
 
 interface ITableRelationship {
     relation: IRelation
 }
 
 const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
-    const { tables } = React.useContext(EditorContext);
+    const { tables } = React.useContext(TableContext);
 
     const tablesPosition = React.useMemo(() => {
         const startTablePosition = tables.find(t => t.id === relation.startTableField.tableID);

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {ITable, linkingTableField} from "../../domain/domain.ts";
 import removeIcon from "../../assets/remove.svg";
-import {EditorContext} from "../../context/useEditorContext.tsx";
+import {TableContext} from "../../context/TableContext.tsx";
 
 interface IEditorDbTable {
     table: ITable,
@@ -14,7 +14,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
     const refForeignObject = React.useRef<SVGForeignObjectElement>(null);
     const refTable = React.useRef<HTMLDivElement>(null);
 
-    const { removeTable, updateTable, setHoveredHandler } = React.useContext(EditorContext);
+    const { removeTable, updateTable, setHoveredHandler } = React.useContext(TableContext);
 
     const [computedForeignObjectHeight, setComputedForeignObjectHeight] = React.useState<number>(0);
 

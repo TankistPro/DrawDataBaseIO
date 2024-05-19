@@ -3,9 +3,12 @@ import * as React from "react";
 import {EditorContext} from "../../context/useEditorContext.tsx";
 import {ILinkingLine, linkingTableField} from "../../domain/domain.ts";
 import TableRelationship from "../EditorDBTable/TableRelationship.tsx";
+import {TableContext} from "../../context/TableContext.tsx";
 
 const EditorArea = () => {
-    const { tables, setLinkingLineHandler, linkingLine, createRelationShip, relations } = React.useContext(EditorContext);
+    const {setLinkingLineHandler, linkingLine, createRelationShip, relations } = React.useContext(EditorContext);
+    const {tables } = React.useContext(TableContext);
+
     const [isLinking, setIsLinking] = React.useState<boolean>(false);
     const startLinkingMouseDownHandler = (event: React.MouseEvent, startField: linkingTableField) => {
         setIsLinking(true);

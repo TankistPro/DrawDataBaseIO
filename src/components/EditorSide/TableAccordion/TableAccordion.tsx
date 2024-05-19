@@ -2,7 +2,7 @@ import * as React from "react";
 
 import {ITable, ITableField} from "../../../domain/domain.ts";
 import {DB_TYPES} from "../../../config/db_config.ts";
-import {EditorContext} from "../../../context/useEditorContext.tsx";
+import {TableContext} from "../../../context/TableContext.tsx";
 
 interface ITableAccordion {
     table: ITable,
@@ -11,7 +11,7 @@ interface ITableAccordion {
 }
 
 const TableAccordion : React.FC<ITableAccordion> = ({ isOpen, table, toggleOpen }) => {
-    const { updateTable, addTableField } = React.useContext(EditorContext);
+    const { updateTable, addTableField } = React.useContext(TableContext);
 
     const updateNameHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         table.tableName = event.target.value;
