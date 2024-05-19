@@ -1,14 +1,20 @@
 import * as React from "react";
 import { createContext, ReactElement} from "react";
-import {IEditorContext, ITable} from "../domain/domain.ts";
+import {IEditorContext, ILinkingLine, IRelation, ITable} from "../domain/domain.ts";
 import {createBaseTableField} from "../config/db_config.ts";
 
 export const EditorContext = createContext<IEditorContext>({
     tables: [],
+    hoveredTable: null,
+    linkingLine: null,
+    relations: [],
     addTable: () => {},
     removeTable: () => {},
     updateTable: () =>{},
-    addTableField: () => {}
+    addTableField: () => {},
+    setHoveredHandler: () => {},
+    setLinkingLineHandler: () => {},
+    createRelationShip: () => {}
 })
 
 interface IEditorContextProvider {
@@ -16,8 +22,11 @@ interface IEditorContextProvider {
 }
 
 export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ children }) => {
-    // eslint-disable-next-line prefer-const
-    let [tables, setTables] = React.useState<ITable[]>([]);
+    const [tables, setTables] = React.useState<ITable[]>([]);
+    const [hoveredTable, setHoveredTable] = React.useState<ITable | null>(null);
+    const [linkingLine, setLinkingLine] = React.useState<ILinkingLine | null>(null);
+    const [relations, setRelations] = React.useState<IRelation[] | []>([]);
+
     const addTable = () => {
         const newTables: ITable = {
             id: Date.now(),
@@ -48,7 +57,6 @@ export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ childr
             let table = tables[indexTable];
             table = tableEntity
 
-            // tables = [...tables, table];
             tables[indexTable] = table;
 
             setTables([...tables])
@@ -67,16 +75,59 @@ export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ childr
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    const setHoveredHandler = (table: ITable | null) => {
+        if(table != null) {
+            setHoveredTable(prevState => {
+                return {
+                    ...prevState, ...table
+                }
+            })
+        } else {
+            setHoveredTable(null)
+        }
+    }
+
+    const setLinkingLineHandler = (link: ILinkingLine | null) => {
+        if(link != null) {
+            setLinkingLine(prevState => {
+                return {
+                    ...prevState, ...link
+                }
+            })
+        }else {
+            setLinkingLine( null)
+        }
+    }
+
+    const createRelationShip = (linkingPayload: ILinkingLine) => {
+        if (linkingPayload.endTableField?.tableID === linkingPayload.startTableField?.tableID) {
+            console.log("Невозможно создать связь для одной и той же таблицы!")
+            return
+        }
+        console.log(linkingPayload);
+
+        const newRelation : IRelation = {
+            startTableField: linkingPayload.startTableField,
+            endTableField: linkingPayload.endTableField
+        }
+
+        setRelations(prevState => [...prevState, newRelation])
+    }
+
     return (
         <EditorContext.Provider
             value={{
                 tables,
+                hoveredTable,
+                linkingLine,
+                relations,
                 addTable,
                 removeTable,
                 updateTable,
-                addTableField
+                addTableField,
+                setHoveredHandler,
+                setLinkingLineHandler,
+                createRelationShip
             }}
         >
             { children }
