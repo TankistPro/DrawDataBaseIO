@@ -64,9 +64,9 @@ const TableAccordion : React.FC<ITableAccordion> = ({ isOpen, table, toggleOpen 
             <div className="px">
                 <div
                     onClick={() => toggleOpen(table.id)}
-                    className="flex items-center justify-between cursor-pointer border-b-[1px] border-gray-300 px-2 hover:bg-gray-50 transition hover:transition hover:bg-opacity-75 py-3 rounded">
+                    className={`${ isOpen ? "bg-gray-50 bg-opacity-75" : "" } flex items-center justify-between cursor-pointer border-b-[1px] border-gray-300 px-2 hover:bg-gray-50 transition hover:transition hover:bg-opacity-75 py-3 rounded`}>
                     <p className="font-medium">{ table.tableName }</p>
-                    <span className={`${ isOpen ? '' : 'rotate-180' } transition`}>
+                    <span className={`${ isOpen ? '' : 'rotate-180' } transition duration-200 ease-linear`}>
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
                              focusable="false" aria-hidden="true">
                             <path fillRule="evenodd" clipRule="evenodd"
@@ -75,7 +75,7 @@ const TableAccordion : React.FC<ITableAccordion> = ({ isOpen, table, toggleOpen 
                         </svg>
                     </span>
                 </div>
-                <div className={`px-2 py-3 text-sm ${isOpen ? "" : "hidden"}`}>
+                <div className={`px-2 py-3 text-sm overflow-hidden ${isOpen ? "" : "hidden"} transition-all`}>
                     <div className="flex gap-2 items-center">
                         Name:
                         <input className="w-full bg-white rounded outline-none px-2 py-1"
