@@ -3,6 +3,7 @@ import {ITable, linkingTableField} from "../../domain/domain.ts";
 import removeIcon from "../../assets/remove.svg";
 import {TableContext} from "../../context/TableContext.tsx";
 import {RelationshipContext} from "../../context/RelationshipContext.tsx";
+import {SideBarContext} from "../../context/SideBarContext.tsx";
 
 interface IEditorDbTable {
     table: ITable,
@@ -17,6 +18,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
 
     const { removeTable, updateTable, setHoveredHandler } = React.useContext(TableContext);
     const { removeRelationShip } = React.useContext(RelationshipContext);
+    const { openAccordionTableID, openAccordionTable } = React.useContext(SideBarContext);
 
     const [computedForeignObjectHeight, setComputedForeignObjectHeight] = React.useState<number>(0);
 
@@ -76,13 +78,17 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
             height={computedForeignObjectHeight}
             x={table.tablePosition.x}
             y={table.tablePosition.y}
-            onMouseDown={tableMouseDownHandler}
             ref={refForeignObject}
+            onMouseDown={tableMouseDownHandler}
             onMouseEnter={() => setHoveredHandler(table)}
             onMouseLeave={() => setHoveredHandler(null)}
+            onDoubleClick={() => openAccordionTable(table.id)}
         >
             <div
-                className={`w-[300px] h-max bg-white rounded-xl border-2 border-sky-200 overflow-hidden  ${ isLinking ? "hover:border-blue-700" : "cursor-move hover:border-dashed " } hover:border-blue-400 transition-all duration-150 z-20 absolute`}
+                className={`w-[300px] h-max bg-white rounded-xl border-2 border-sky-200 overflow-hidden 
+                            ${ isLinking ? "hover:border-blue-800" : "cursor-move hover:border-dashed " } 
+                            ${ openAccordionTableID === table.id ? "border-blue-500" : "" } 
+                            hover:border-blue-400 transition-all duration-150 z-20 absolute`}
                 ref={refTable}
             >
                 <div className="bg-gray-50 py-2 px-2 select-none flex justify-between">

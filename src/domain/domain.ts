@@ -54,3 +54,8 @@ export interface IRelationshipContext {
     removeRelationShip: (tableId: number) => void,
     setIsLinking: ((flag: boolean) => void)
 }
+
+export interface ISideBarContext {
+    openAccordionTableID: number | null,
+    openAccordionTable: (tableId: number | null) => void
+}

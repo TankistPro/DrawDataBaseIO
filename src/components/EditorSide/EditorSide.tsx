@@ -2,15 +2,18 @@ import * as React from "react";
 
 import TableAccordion from "./TableAccordion/TableAccordion.tsx";
 import {TableContext} from "../../context/TableContext.tsx";
+import {SideBarContext} from "../../context/SideBarContext.tsx";
 
 function EditorSide() {
     const { addTable, tables } = React.useContext(TableContext);
-    const [openedTableId, setOpenedTableId] = React.useState(-1);
+    const { openAccordionTableID, openAccordionTable } = React.useContext(SideBarContext);
 
-    const toggleOpenedTableIdHandler = (id: number) => {
-        if(id===openedTableId) setOpenedTableId(-1);
-        else setOpenedTableId(id)
-    }
+    //const [openedTableId, setOpenedTableId] = React.useState(-1);
+
+    // const toggleOpenedTableIdHandler = (id: number) => {
+    //     if(id===openedTableId) setOpenedTableId(-1);
+    //     else setOpenedTableId(id)
+    // }
 
     return (
         <div className="h-full w-1/4 bg-sky-100 box-sha pt-4 px-4 pb-3 min-w-96" id="aside-bar">
@@ -31,7 +34,7 @@ function EditorSide() {
             </div>
             <div className="mt-2">
                 {tables.map(t => (
-                    <TableAccordion table={t} isOpen={openedTableId === t.id} key={t.id} toggleOpen={toggleOpenedTableIdHandler} />
+                    <TableAccordion table={t} isOpen={openAccordionTableID === t.id} key={t.id} toggleOpen={openAccordionTable} />
                 )) }
             </div>
         </div>
