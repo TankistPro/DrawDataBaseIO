@@ -12,12 +12,13 @@ export interface ITableField {
     name: string,
     type: string | number,
     isNull: boolean,
-    pk: boolean
+    pk: boolean,
+    position: number
 }
 
 export interface linkingTableField {
     tableID: number,
-    field: ITableField
+    field: ITableField,
 }
 
 export interface ILinkingLine {

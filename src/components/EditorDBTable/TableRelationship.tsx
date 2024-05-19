@@ -30,10 +30,10 @@ const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
         const width = tableWidth * zoom;
 
         const x1 = tablesPosition.startTable.x;
-        const y1 = tablesPosition.startTable.y + 46 + 38 / 2;
+        const y1 = tablesPosition.startTable.y + 46 + relation.startTableField.field.position * 38 + 38 / 2;
 
         const x2 = tablesPosition.endTable.x;
-        const y2 = tablesPosition.endTable.y + 46 + 38 / 2;
+        const y2 = tablesPosition.endTable.y + 46 + relation.endTableField.field.position * 38 + 38 / 2;
 
         let radius = 10 * zoom;
         const midX = (x2 + x1 + width) / 2;

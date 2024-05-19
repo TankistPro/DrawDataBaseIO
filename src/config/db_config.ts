@@ -9,11 +9,12 @@ export const DB_TYPES = [
     'TEXT'
 ]
 
-export const createBaseTableField = (): ITableField => {
+export const createBaseTableField = (position = 0): ITableField => {
     return {
         name: "",
         type: DB_TYPES[0],
         isNull: false,
-        pk: false
+        pk: false,
+        position: position
     }
 }

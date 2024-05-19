@@ -62,7 +62,7 @@ export const TableContextProvider: React.FC<ITableContextProvider> = ({ children
         if(indexTable != -1) {
             const table = tables[indexTable];
 
-            table.fields = [...table.fields, createBaseTableField()];
+            table.fields = [...table.fields, createBaseTableField(table.fields.length)];
 
             setTables([...tables])
         }
