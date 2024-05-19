@@ -1,15 +1,15 @@
-import EditorDBTable from "../EditorDBTable/EditorDBTable.tsx";
 import * as React from "react";
-import {EditorContext} from "../../context/useEditorContext.tsx";
+
+import EditorDBTable from "../EditorDBTable/EditorDBTable.tsx";
 import {ILinkingLine, linkingTableField} from "../../domain/domain.ts";
 import TableRelationship from "../EditorDBTable/TableRelationship.tsx";
 import {TableContext} from "../../context/TableContext.tsx";
+import {RelationshipContext} from "../../context/RelationshipContext.tsx";
 
 const EditorArea = () => {
-    const {setLinkingLineHandler, linkingLine, createRelationShip, relations } = React.useContext(EditorContext);
     const {tables } = React.useContext(TableContext);
+    const {setLinkingLineHandler, linkingLine, createRelationShip, relations, setIsLinking, isLinking } = React.useContext(RelationshipContext);
 
-    const [isLinking, setIsLinking] = React.useState<boolean>(false);
     const startLinkingMouseDownHandler = (event: React.MouseEvent, startField: linkingTableField) => {
         setIsLinking(true);
 

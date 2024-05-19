@@ -1,18 +1,18 @@
 import EditorSide from "./components/EditorSide/EditorSide.tsx";
 import EditorArea from "./components/EditorArea/EditorArea.tsx";
 
-import {EditorContextProvider} from "./context/useEditorContext.tsx";
 import { TableContextProvider } from "./context/TableContext.tsx";
+import { RelationshipContextProvider } from "./context/RelationshipContext.tsx";
 
 function App() {
   return (
     <main className="bg-sky-50 h-full flex">
-        <EditorContextProvider>
-            <TableContextProvider>
+        <TableContextProvider>
+            <RelationshipContextProvider>
                 <EditorSide />
                 <EditorArea />
-            </TableContextProvider>
-        </EditorContextProvider>
+            </RelationshipContextProvider>
+        </TableContextProvider>
     </main>
   )
 }

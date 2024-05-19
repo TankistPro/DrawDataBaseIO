@@ -1,21 +1,22 @@
-import * as React from "react";
-import { createContext, ReactElement} from "react";
-import {IEditorContext, ILinkingLine, IRelation} from "../domain/domain.ts";
+import {ILinkingLine, IRelation, IRelationshipContext} from "../domain/domain.ts";
+import React, {ReactElement} from "react";
 
-export const EditorContext = createContext<IEditorContext>({
-    linkingLine: null,
-    relations: [],
-    setLinkingLineHandler: () => {},
-    createRelationShip: () => {}
-})
-
-interface IEditorContextProvider {
+interface IRelationshipContextProvider {
     children: ReactElement | JSX.Element[] | JSX.Element;
 }
+export const RelationshipContext = React.createContext<IRelationshipContext>({
+    isLinking: false,
+    relations: [],
+    linkingLine: null,
+    setLinkingLineHandler: () => {},
+    createRelationShip: () => {},
+    setIsLinking: () => {}
+});
 
-export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ children }) => {
+export const RelationshipContextProvider :  React.FC<IRelationshipContextProvider> = ({ children }) => {
     const [linkingLine, setLinkingLine] = React.useState<ILinkingLine | null>(null);
     const [relations, setRelations] = React.useState<IRelation[] | []>([]);
+    const [isLinking, setIsLinking] = React.useState<boolean>(false);
 
     const setLinkingLineHandler = (link: ILinkingLine | null) => {
         if(link != null) {
@@ -34,7 +35,6 @@ export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ childr
             console.log("Невозможно создать связь для одной и той же таблицы!")
             return
         }
-        console.log(linkingPayload);
 
         const newRelation : IRelation = {
             startTableField: linkingPayload.startTableField,
@@ -45,15 +45,15 @@ export const EditorContextProvider: React.FC<IEditorContextProvider> = ({ childr
     }
 
     return (
-        <EditorContext.Provider
-            value={{
-                linkingLine,
-                relations,
-                setLinkingLineHandler,
-                createRelationShip
-            }}
-        >
+        <RelationshipContext.Provider value={{
+            isLinking,
+            relations,
+            linkingLine,
+            setLinkingLineHandler,
+            createRelationShip,
+            setIsLinking
+        }}>
             { children }
-        </EditorContext.Provider>
+        </RelationshipContext.Provider>
     )
 }
