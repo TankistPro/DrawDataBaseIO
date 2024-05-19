@@ -40,7 +40,7 @@ export const TableContextProvider: React.FC<ITableContextProvider> = ({ children
 
     const removeTable = (tableId: number) => {
         const updatedTablesState = tables.filter(t => t.id != tableId);
-        setTables(updatedTablesState)
+        setTables(updatedTablesState);
     }
 
     const updateTable = (idTable: number, tableEntity: ITable) => {

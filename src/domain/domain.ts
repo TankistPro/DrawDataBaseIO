@@ -50,5 +50,6 @@ export interface IRelationshipContext {
     relations: IRelation[] | [],
     setLinkingLineHandler:((table: ILinkingLine | null) => void ),
     createRelationShip: ((linkingPayload: ILinkingLine) => void),
+    removeRelationShip: (tableId: number) => void,
     setIsLinking: ((flag: boolean) => void)
 }

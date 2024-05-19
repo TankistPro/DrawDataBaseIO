@@ -37,11 +37,13 @@ const EditorArea = () => {
         setLinkingLineHandler(linkingPayload)
 
         createRelationShip(linkingPayload);
+        document.body.style.cursor = "default";
     }
 
     const mouseUpLinkHandler = () => {
         setIsLinking(false);
         setLinkingLineHandler(null);
+        document.body.style.cursor = "default";
 
         // @ts-ignore
         document.removeEventListener('mousemove', moveLinkHandler);

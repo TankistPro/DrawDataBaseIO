@@ -2,6 +2,7 @@ import * as React from "react";
 import {ITable, linkingTableField} from "../../domain/domain.ts";
 import removeIcon from "../../assets/remove.svg";
 import {TableContext} from "../../context/TableContext.tsx";
+import {RelationshipContext} from "../../context/RelationshipContext.tsx";
 
 interface IEditorDbTable {
     table: ITable,
@@ -15,6 +16,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
     const refTable = React.useRef<HTMLDivElement>(null);
 
     const { removeTable, updateTable, setHoveredHandler } = React.useContext(TableContext);
+    const { removeRelationShip } = React.useContext(RelationshipContext);
 
     const [computedForeignObjectHeight, setComputedForeignObjectHeight] = React.useState<number>(0);
 
@@ -63,6 +65,11 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
         updateTable(table.id, table)
     }
 
+    const removeTableHandler = (tableId: number) => {
+        removeRelationShip(tableId);
+        removeTable(tableId);
+    }
+
     return (
         <foreignObject
             width="300"
@@ -81,7 +88,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
                 <div className="bg-gray-50 py-2 px-2 select-none flex justify-between">
                     <p className="text-black font-bold text-xl">{ table.tableName }</p>
                     <div>
-                        <button className="w-7 bg-red-400 rounded px-1 py-1 hover:bg-red-500" onClick={() => removeTable ? removeTable(table.id) : null}>
+                        <button className="w-7 bg-red-400 rounded px-1 py-1 hover:bg-red-500" onClick={() => removeTableHandler(table.id)}>
                             <img src={removeIcon} alt=""/>
                         </button>
                     </div>

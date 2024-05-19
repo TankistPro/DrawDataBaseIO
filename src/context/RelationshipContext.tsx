@@ -10,7 +10,8 @@ export const RelationshipContext = React.createContext<IRelationshipContext>({
     linkingLine: null,
     setLinkingLineHandler: () => {},
     createRelationShip: () => {},
-    setIsLinking: () => {}
+    setIsLinking: () => {},
+    removeRelationShip: () => {}
 });
 
 export const RelationshipContextProvider :  React.FC<IRelationshipContextProvider> = ({ children }) => {
@@ -44,6 +45,12 @@ export const RelationshipContextProvider :  React.FC<IRelationshipContextProvide
         setRelations(prevState => [...prevState, newRelation])
     }
 
+    const removeRelationShip = (tableId: number) => {
+        const updatedRelations = relations.filter(r => r.endTableField.tableID != tableId && r.startTableField.tableID !== tableId);
+        setRelations([...updatedRelations]);
+    }
+
+
     return (
         <RelationshipContext.Provider value={{
             isLinking,
@@ -51,6 +58,7 @@ export const RelationshipContextProvider :  React.FC<IRelationshipContextProvide
             linkingLine,
             setLinkingLineHandler,
             createRelationShip,
+            removeRelationShip,
             setIsLinking
         }}>
             { children }
