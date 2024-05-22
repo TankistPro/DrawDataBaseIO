@@ -85,9 +85,9 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
             onDoubleClick={() => openAccordionTable(table.id)}
         >
             <div
-                className={`w-[300px] h-max bg-white rounded-xl border-2 border-sky-200 overflow-hidden 
+                className={`w-[300px] h-max bg-white rounded-xl border-2 overflow-hidden 
                             ${ isLinking ? "hover:border-blue-800" : "cursor-move hover:border-dashed " } 
-                            ${ openAccordionTableID === table.id ? "border-blue-500" : "" } 
+                            ${ openAccordionTableID === table.id ? "border-blue-500" : "border-sky-200" } 
                             hover:border-blue-400 transition-all duration-150 z-20 absolute`}
                 ref={refTable}
             >

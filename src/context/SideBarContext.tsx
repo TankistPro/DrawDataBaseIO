@@ -14,7 +14,8 @@ export const SideBarContextProvider : React.FC<ISideBarContextProvider>= ({ chil
     const [openAccordionTableID, setOpenAccordionTableID] = React.useState<number | null>(null);
 
     const openAccordionTable = (tableID: number | null) => {
-        setOpenAccordionTableID(tableID);
+        if(tableID === openAccordionTableID) setOpenAccordionTableID(null);
+        else setOpenAccordionTableID(tableID);
     }
 
     return (

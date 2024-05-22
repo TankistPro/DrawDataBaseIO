@@ -1,6 +1,7 @@
 import React from "react";
 import { IRelation} from "../../domain/domain.ts";
 import {TableContext} from "../../context/TableContext.tsx";
+import {calcRelationsPath} from "../../utils/calcRelationsPath.ts";
 
 interface ITableRelationship {
     relation: IRelation
@@ -8,6 +9,7 @@ interface ITableRelationship {
 
 const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
     const { tables } = React.useContext(TableContext);
+    const relationRef = React.useRef<SVGPathElement>(null);
 
     const tablesPosition = React.useMemo(() => {
         const startTablePosition = tables.find(t => t.id === relation.startTableField.tableID);
@@ -24,94 +26,32 @@ const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
         }
     }, [relation.endTableField, relation.startTableField, tables])
 
-    const calcData = () => {
-        const zoom = 1;
-        const tableWidth = 300;
-        const width = tableWidth * zoom;
-
-        const x1 = tablesPosition.startTable.x;
-        const y1 = tablesPosition.startTable.y + 46 + relation.startTableField.field.position * 38 + 38 / 2;
-
-        const x2 = tablesPosition.endTable.x;
-        const y2 = tablesPosition.endTable.y + 46 + relation.endTableField.field.position * 38 + 38 / 2;
-
-        let radius = 10 * zoom;
-        const midX = (x2 + x1 + width) / 2;
-        const endX = x2 + width < x1 ? x2 + width : x2;
-
-        if (Math.abs(y1 - y2) <= 36 * zoom) {
-            radius = Math.abs(y2 - y1) / 3;
-            if (radius <= 2) {
-                if (x1 + width <= x2) return `M ${x1 + width} ${y1} L ${x2} ${y2 + 0.1}`;
-                else if (x2 + width < x1)
-                    return `M ${x1} ${y1} L ${x2 + width} ${y2 + 0.1}`;
-            }
+    const circlePosition = () => {
+        let lineLength = 0;
+        const startCircle = {
+            x: 0,
+            y: 0
         }
-        if (y1 <= y2) {
-            if (x1 + width <= x2) {
-                return `M ${x1 + width} ${y1} L ${
-                    midX - radius
-                } ${y1} A ${radius} ${radius} 0 0 1 ${midX} ${y1 + radius} L ${midX} ${
-                    y2 - radius
-                } A ${radius} ${radius} 0 0 0 ${midX + radius} ${y2} L ${endX} ${y2}`;
-            } else if (x2 <= x1 + width && x1 <= x2) {
-                return `M ${x1 + width} ${y1} L ${
-                    x2 + width
-                } ${y1} A ${radius} ${radius} 0 0 1 ${x2 + width + radius} ${
-                    y1 + radius
-                } L ${x2 + width + radius} ${y2 - radius} A ${radius} ${radius} 0 0 1 ${
-                    x2 + width
-                } ${y2} L ${x2 + width} ${y2}`;
-            } else if (x2 + width >= x1 && x2 + width <= x1 + width) {
-                return `M ${x1} ${y1} L ${
-                    x2 - radius
-                } ${y1} A ${radius} ${radius} 0 0 0 ${x2 - radius - radius} ${
-                    y1 + radius
-                } L ${x2 - radius - radius} ${y2 - radius} A ${radius} ${radius} 0 0 0 ${
-                    x2 - radius
-                } ${y2} L ${x2} ${y2}`;
-            } else {
-                return `M ${x1} ${y1} L ${
-                    midX + radius
-                } ${y1} A ${radius} ${radius} 0 0 0 ${midX} ${y1 + radius} L ${midX} ${
-                    y2 - radius
-                } A ${radius} ${radius} 0 0 1 ${midX - radius} ${y2} L ${endX} ${y2}`;
-            }
-        } else {
-            if (x1 + width <= x2) {
-                return `M ${x1 + width} ${y1} L ${
-                    midX - radius
-                } ${y1} A ${radius} ${radius} 0 0 0 ${midX} ${y1 - radius} L ${midX} ${
-                    y2 + radius
-                } A ${radius} ${radius} 0 0 1 ${midX + radius} ${y2} L ${endX} ${y2}`;
-            } else if (x1 + width >= x2 && x1 + width <= x2 + width) {
-                return `M ${x1} ${y1} L ${
-                    x1 - radius - radius
-                } ${y1} A ${radius} ${radius} 0 0 1 ${x1 - radius - radius - radius} ${
-                    y1 - radius
-                } L ${x1 - radius - radius - radius} ${
-                    y2 + radius
-                } A ${radius} ${radius} 0 0 1 ${
-                    x1 - radius - radius
-                } ${y2} L ${endX} ${y2}`;
-            } else if (x1 >= x2 && x1 <= x2 + width) {
-                return `M ${x1 + width} ${y1} L ${
-                    x1 + width + radius
-                } ${y1} A ${radius} ${radius} 0 0 0 ${x1 + width + radius + radius} ${
-                    y1 - radius
-                } L ${x1 + width + radius + radius} ${
-                    y2 + radius
-                } A ${radius} ${radius} 0 0 0 ${x1 + width + radius} ${y2} L ${
-                    x2 + width
-                } ${y2}`;
-            } else {
-                return `M ${x1} ${y1} L ${
-                    midX + radius
-                } ${y1} A ${radius} ${radius} 0 0 1 ${midX} ${y1 - radius} L ${midX} ${
-                    y2 + radius
-                } A ${radius} ${radius} 0 0 0 ${midX - radius} ${y2} L ${endX} ${y2}`;
-            }
+        const endCircle = {
+            x: 0,
+            y: 0
         }
+        if (relationRef.current) {
+            lineLength = relationRef.current.getTotalLength();
+
+            const startPoint =  relationRef.current.getPointAtLength(20);
+            startCircle.x = startPoint.x;
+            startCircle.y = startPoint.y;
+
+            const endPoint = relationRef.current.getPointAtLength(lineLength - 20);
+            endCircle.x = endPoint.x;
+            endCircle.y = endPoint.y;
+        }
+
+        return {
+            startCircle,
+            endCircle
+        };
     }
 
     return (
@@ -122,9 +62,45 @@ const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
                 fill="none"
                 strokeWidth={2}
                 cursor="pointer"
-                d={calcData()}
-            >
-            </path>
+                d={calcRelationsPath(tablesPosition, relation)}
+                ref={relationRef}
+            />
+            <>
+                <circle
+                    cx={circlePosition().startCircle.x}
+                    cy={circlePosition().startCircle.y}
+                    r="12"
+                    fill="grey"
+                    className="group-hover:fill-sky-700"
+                />
+                <text
+                    x={circlePosition().startCircle.x}
+                    y={circlePosition().startCircle.y}
+                    fill="white"
+                    strokeWidth="0.5"
+                    textAnchor="middle"
+                    alignmentBaseline="middle"
+                >
+                    1
+                </text>
+                <circle
+                    cx={circlePosition().endCircle.x}
+                    cy={circlePosition().endCircle.y}
+                    r="12"
+                    fill="grey"
+                    className="group-hover:fill-sky-700"
+                />
+                <text
+                    x={circlePosition().endCircle.x}
+                    y={circlePosition().endCircle.y}
+                    fill="white"
+                    strokeWidth="0.5"
+                    textAnchor="middle"
+                    alignmentBaseline="middle"
+                >
+                    N
+                </text>
+            </>
         </g>
     );
 };
