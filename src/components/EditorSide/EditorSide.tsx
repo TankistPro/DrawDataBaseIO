@@ -58,7 +58,7 @@ function EditorSide() {
                             <div
                                 onClick={() => setActiveTab(Number(t_key))}
                                 className={`${ activeTab == Number(t_key) ? 'bg-gray-50 ' : '' } px-6 py-1 cursor-pointer flex-shrink-0 hover:bg-gray-50 hover:bg-opacity-60 rounded-t-lg`} key={t_key}>
-                                { TABS_LIST[t_key] }
+                                { TABS_LIST[t_key as unknown as keyof typeof TABS_LIST] }
                             </div>
                         ))}
                     </div>
