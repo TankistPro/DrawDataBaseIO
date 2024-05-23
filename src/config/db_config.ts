@@ -18,3 +18,13 @@ export const createBaseTableField = (position = 0): ITableField => {
         position: position
     }
 }
+
+export enum BAR_TABS {
+    TABLES,
+    RELATIONS
+}
+
+export const TABS_LIST = {
+    [BAR_TABS.TABLES]: "Tables",
+    [BAR_TABS.RELATIONS]: "Relations"
+}

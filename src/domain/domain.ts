@@ -57,5 +57,7 @@ export interface IRelationshipContext {
 
 export interface ISideBarContext {
     openAccordionTableID: number | null,
-    openAccordionTable: (tableId: number | null) => void
+    openAccordionTable: (tableId: number | null) => void,
+    activeTab: number,
+    setActiveTab: (tab: number) => void
 }

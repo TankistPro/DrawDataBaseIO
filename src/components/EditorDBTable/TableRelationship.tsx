@@ -55,10 +55,10 @@ const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
     }
 
     return (
-        <g>
+        <g className="group select-none cursor-pointer">
             <path
                 stroke="gray"
-                className="group-hover:stroke-sky-700"
+                className="group-hover:stroke-indigo-800 transition"
                 fill="none"
                 strokeWidth={2}
                 cursor="pointer"
@@ -71,7 +71,7 @@ const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
                     cy={circlePosition().startCircle.y}
                     r="12"
                     fill="grey"
-                    className="group-hover:fill-sky-700"
+                    className="group-hover:fill-indigo-800 transition"
                 />
                 <text
                     x={circlePosition().startCircle.x}
@@ -88,7 +88,7 @@ const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
                     cy={circlePosition().endCircle.y}
                     r="12"
                     fill="grey"
-                    className="group-hover:fill-sky-700"
+                    className="group-hover:fill-indigo-800 transition"
                 />
                 <text
                     x={circlePosition().endCircle.x}
