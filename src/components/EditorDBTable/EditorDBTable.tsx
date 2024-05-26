@@ -18,7 +18,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
     const refTable = React.useRef<HTMLDivElement>(null);
 
     const { removeTable, updateTable, setHoveredHandler } = React.useContext(TableContext);
-    const { removeRelationShip } = React.useContext(RelationshipContext);
+    const { removeRelationShipByTableId } = React.useContext(RelationshipContext);
     const { openAccordionTableID, openAccordionTable } = React.useContext(SideBarContext);
 
     const [computedForeignObjectHeight, setComputedForeignObjectHeight] = React.useState<number>(0);
@@ -69,7 +69,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
     }
 
     const removeTableHandler = (tableId: number) => {
-        removeRelationShip(tableId);
+        removeRelationShipByTableId(tableId);
         removeTable(tableId);
     }
 
