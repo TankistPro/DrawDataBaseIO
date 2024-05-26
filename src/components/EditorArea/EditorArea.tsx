@@ -104,8 +104,8 @@ const EditorArea = () => {
                     <line strokeDasharray="4 4 4" x1={linkingLine?.x1} y1={linkingLine?.y1}
                           x2={linkingLine?.x2} y2={linkingLine?.y2} stroke="black"/>
                 }
-                {relations?.length && relations.map((r, index) => (
-                    <TableRelationship relation={r} key={index} />
+                {relations?.length && relations.map(r => (
+                    <TableRelationship relation={r} key={r.id} />
                 ))}
             </svg>
         </div>

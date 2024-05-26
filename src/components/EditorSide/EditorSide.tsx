@@ -9,23 +9,28 @@ import ArrowRight from "../../assets/arrow-right.svg";
 import {BAR_TABS, TABS_LIST} from "../../config/db_config.ts";
 import EmptyTab from "./EmptyTab.tsx";
 import {RelationshipContext} from "../../context/RelationshipContext.tsx";
+import RelationshipAccordion from "./RelationshipAccordion/RelationshipAccordion.tsx";
 
 function EditorSide() {
     const { addTable, tables } = React.useContext(TableContext);
     const { relations } = React.useContext(RelationshipContext);
     const { setActiveTab, activeTab } = React.useContext(SideBarContext);
 
-    const { openAccordionTableID, openAccordionTable } = React.useContext(SideBarContext);
+    const { openAccordionTableID, openAccordionTable, openAccordionRelation, openAccordionRelationID } = React.useContext(SideBarContext);
 
     const renderTabs = () => {
         if(activeTab === BAR_TABS.TABLES && tables.length) {
             return <>
                 {tables.map(t => (
-                <TableAccordion table={t} isOpen={openAccordionTableID === t.id} key={t.id} toggleOpen={openAccordionTable} />
+                    <TableAccordion table={t} isOpen={openAccordionTableID === t.id} key={t.id} toggleOpen={openAccordionTable} />
                 ))}
             </>
         } else if (activeTab === BAR_TABS.RELATIONS && relations.length) {
-            return ""
+            return <>
+                {relations.map(r => (
+                    <RelationshipAccordion relation={r} isOpen={openAccordionRelationID === r.id} key={r.id} toggleOpen={openAccordionRelation} />
+                ))}
+            </>
         } else {
             return <EmptyTab text="Пусто" />
         }

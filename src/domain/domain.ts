@@ -31,6 +31,7 @@ export interface ILinkingLine {
 }
 
 export interface IRelation {
+    id: number,
     startTableField: linkingTableField,
     endTableField: linkingTableField
 }
@@ -51,13 +52,16 @@ export interface IRelationshipContext {
     relations: IRelation[] | [],
     setLinkingLineHandler:((table: ILinkingLine | null) => void ),
     createRelationShip: ((linkingPayload: ILinkingLine) => void),
-    removeRelationShip: (tableId: number) => void,
+    removeRelationShipByTableId: (tableId: number) => void,
+    removeRelationShip: (relationId: number) => void,
     setIsLinking: ((flag: boolean) => void)
 }
 
 export interface ISideBarContext {
     openAccordionTableID: number | null,
+    openAccordionRelationID: number | null,
     openAccordionTable: (tableId: number | null) => void,
+    openAccordionRelation: (relationId: number | null) => void,
     activeTab: number,
     setActiveTab: (tab: number) => void
 }

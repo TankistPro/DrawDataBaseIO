@@ -8,12 +8,15 @@ interface ISideBarContextProvider {
 
 export const SideBarContext = React.createContext<ISideBarContext>({
     openAccordionTableID: null,
+    openAccordionRelationID: null,
     openAccordionTable: () => {},
+    openAccordionRelation: () => {},
     activeTab: BAR_TABS.TABLES,
     setActiveTab: () => {}
 })
 
 export const SideBarContextProvider : React.FC<ISideBarContextProvider>= ({ children }) => {
+    const [openAccordionRelationID, setOpenAccordionRelationID] = React.useState<number | null>(null);
     const [openAccordionTableID, setOpenAccordionTableID] = React.useState<number | null>(null);
     const [activeTab, setActiveTab] = React.useState<number>(BAR_TABS.TABLES);
 
@@ -23,10 +26,18 @@ export const SideBarContextProvider : React.FC<ISideBarContextProvider>= ({ chil
         else setOpenAccordionTableID(tableID);
     }
 
+    const openAccordionRelation = (relationId: number | null) => {
+        setActiveTab(BAR_TABS.RELATIONS);
+        if(relationId === openAccordionRelationID) setOpenAccordionRelationID(null);
+        else setOpenAccordionRelationID(relationId);
+    }
+
     return (
         <SideBarContext.Provider value={{
             openAccordionTableID,
+            openAccordionRelationID,
             openAccordionTable,
+            openAccordionRelation,
             activeTab,
             setActiveTab
         }}>

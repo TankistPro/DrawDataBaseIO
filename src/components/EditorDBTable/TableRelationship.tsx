@@ -2,6 +2,7 @@ import React from "react";
 import { IRelation} from "../../domain/domain.ts";
 import {TableContext} from "../../context/TableContext.tsx";
 import {calcRelationsPath} from "../../utils/calcRelationsPath.ts";
+import {SideBarContext} from "../../context/SideBarContext.tsx";
 
 interface ITableRelationship {
     relation: IRelation
@@ -9,6 +10,7 @@ interface ITableRelationship {
 
 const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
     const { tables } = React.useContext(TableContext);
+    const { openAccordionRelation } = React.useContext(SideBarContext);
     const relationRef = React.useRef<SVGPathElement>(null);
 
     const tablesPosition = React.useMemo(() => {
@@ -55,7 +57,7 @@ const TableRelationship: React.FC<ITableRelationship> = ({ relation }) => {
     }
 
     return (
-        <g className="group select-none cursor-pointer">
+        <g className="group select-none cursor-pointer" onDoubleClick={() => openAccordionRelation(relation.id)}>
             <path
                 stroke="gray"
                 className="group-hover:stroke-indigo-800 transition"
