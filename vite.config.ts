@@ -7,5 +7,8 @@ export default defineConfig({
   server: {
     port: 3355,
     host: true
+  },
+  preview: {
+    port: 3355,
   }
 })
