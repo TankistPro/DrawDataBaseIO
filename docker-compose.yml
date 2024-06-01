@@ -5,3 +5,4 @@ services:
     build: .
     ports:
       - 3355:3355
+    command: npm run preview
