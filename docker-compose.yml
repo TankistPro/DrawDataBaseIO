@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - 3355:3355
+    command: npm run vite
