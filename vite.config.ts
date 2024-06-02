@@ -10,5 +10,6 @@ export default defineConfig({
   },
   preview: {
     port: 3355,
+    host: true
   }
 })
