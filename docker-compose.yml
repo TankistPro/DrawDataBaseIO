@@ -6,5 +6,3 @@ services:
     ports:
       - 3355:3355
     command: npm run preview
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
