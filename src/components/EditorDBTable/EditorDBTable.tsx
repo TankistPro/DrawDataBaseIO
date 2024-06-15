@@ -10,10 +10,14 @@ interface IEditorDbTable {
     table: ITable,
     startLinkingHandler: (event: React.MouseEvent, startField: linkingTableField) => void,
     endLinkingHandler: (endField: linkingTableField) => void,
-    isLinking: boolean
+    isLinking: boolean,
+    diagramMovePosition: {
+        x: number,
+        y: number
+    }
 }
 
-const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, endLinkingHandler, isLinking }) => {
+const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, endLinkingHandler, isLinking, diagramMovePosition }) => {
     const refForeignObject = React.useRef<SVGForeignObjectElement>(null);
     const refTable = React.useRef<HTMLDivElement>(null);
 
@@ -62,8 +66,8 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
     }
 
     const moveTableHandler = (event: React.MouseEvent) => {
-        table.tablePosition.x = event.pageX - shiftOffset.shiftX;
-        table.tablePosition.y = event.pageY - shiftOffset.shiftY;
+        table.tablePosition.x = event.pageX - shiftOffset.shiftX - diagramMovePosition.x;
+        table.tablePosition.y = event.pageY - shiftOffset.shiftY - diagramMovePosition.y;
 
         updateTable(table.id, table)
     }
@@ -86,7 +90,7 @@ const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, 
             onDoubleClick={() => openAccordionTable(table.id)}
         >
             <div
-                className={`w-[300px] h-max bg-white rounded-xl border-2 overflow-hidden 
+                className={`custom-table w-[300px] h-max bg-white rounded-xl border-2 overflow-hidden 
                             ${ isLinking ? "hover:border-blue-800" : "cursor-move hover:border-dashed " } 
                             ${ openAccordionTableID === table.id ? "border-blue-500" : "border-sky-200" } 
                             hover:border-blue-400 transition-all duration-150 z-20 absolute`}

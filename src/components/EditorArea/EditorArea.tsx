@@ -10,14 +10,28 @@ const EditorArea = () => {
     const {tables } = React.useContext(TableContext);
     const {setLinkingLineHandler, linkingLine, createRelationShip, relations, setIsLinking, isLinking } = React.useContext(RelationshipContext);
 
+    const diagramRef = React.useRef<SVGGElement>(null);
+    const [startMoveAreaFlag, setStartMoveAreaFlag] = React.useState<boolean>(false);
+    const [diagramMovePosition, setDiagramMovePosition] = React.useState({
+        x: 0,
+        y: 0
+    })
+    const [startCursorMovePosition, setCursorStartMovePosition] = React.useState({
+        x: 0,
+        y: 0
+    })
+    const [startDiagramPosition, setStartDiagramPosition] = React.useState({
+        x: 0,
+        y: 0
+    })
     const startLinkingMouseDownHandler = (event: React.MouseEvent, startField: linkingTableField) => {
         setIsLinking(true);
 
         const newLinkingLine: ILinkingLine = {
-            x1: event.pageX - 384,
-            y1: event.pageY,
-            x2: event.pageX - 384,
-            y2: event.pageY,
+            x1: event.pageX - 384 - diagramMovePosition.x,
+            y1: event.pageY - diagramMovePosition.y,
+            x2: event.pageX - 384 - diagramMovePosition.x,
+            y2: event.pageY - diagramMovePosition.y,
             startTableField: startField,
             endTableField: startField
         };
@@ -55,15 +69,82 @@ const EditorArea = () => {
 
         const newLinkingLine: ILinkingLine = {
             ...linkingLine as ILinkingLine,
-            x2: event.pageX - 384 + 5,
-            y2: event.pageY + 5
+            x2: event.pageX - 384 + 5 - diagramMovePosition.x,
+            y2: event.pageY + 5 - diagramMovePosition.y
         };
 
         setLinkingLineHandler(newLinkingLine)
     }
 
+    const startMoveArea = (event: React.MouseEvent) => {
+        const target = event.target;
+
+        if((target as HTMLElement).closest(".custom-table")) {
+            return;
+        }
+
+        setStartMoveAreaFlag(true);
+
+        setCursorStartMovePosition(prevState => {
+            return {
+                ...prevState,
+                x: event.clientX,
+                y: event.clientY
+            }
+        });
+
+        setStartDiagramPosition(prevState => {
+            return {
+                ...prevState,
+                x: diagramMovePosition.x,
+                y: diagramMovePosition.y
+            }
+        })
+
+        // @ts-ignore
+        // document.addEventListener('mousemove', moveAreaHandler);
+
+        document.addEventListener('mouseup', () => {
+            // @ts-ignore
+            document.removeEventListener('mousemove', moveAreaHandler);
+            setStartMoveAreaFlag(false);
+        })
+    }
+    const moveAreaHandler = (event: React.MouseEvent) => {
+        if(!startMoveAreaFlag) return;
+
+        // console.log(event.clientX - startMovePosition.x,event.pageY - startMovePosition.y );
+
+        setDiagramMovePosition(prevState => {
+            return {
+                ...prevState,
+                x: startDiagramPosition.x + event.clientX - startCursorMovePosition.x,
+                y: startDiagramPosition.y + event.clientY - startCursorMovePosition.y
+            }
+        });
+
+        if (!diagramRef || !diagramRef.current) return;
+        diagramRef.current.style.transform = `translate(${ startDiagramPosition.x + (event.clientX - startCursorMovePosition.x) }px, ${  startDiagramPosition.y + (event.clientY - startCursorMovePosition.y) }px)`;
+
+    }
+    const endMoveArea = () => {
+        setStartDiagramPosition(prevState => {
+            return {
+                ...prevState,
+                x: diagramMovePosition.x,
+                y: diagramMovePosition.y
+            }
+        })
+    }
+
     return (
-        <div className="w-full h-full" id='area'>
+        <div
+            className="w-full h-full"
+            id='area'
+            onMouseDown={startMoveArea}
+            onMouseMove={moveAreaHandler}
+            onMouseUp={endMoveArea}
+        >
             <svg className="w-full h-full">
                 <defs>
                     <pattern
@@ -91,22 +172,29 @@ const EditorArea = () => {
                     height="100%"
                     fill="url(#pattern-circles)"
                 ></rect>
-                {tables.map(item => (
-                    <EditorDBTable
-                        table={item}
-                        key={item.id}
-                        startLinkingHandler={startLinkingMouseDownHandler}
-                        endLinkingHandler={endLinkingMouseUpHandler}
-                        isLinking={isLinking}
-                    />
-                ))}
-                {isLinking &&
-                    <line strokeDasharray="4 4 4" x1={linkingLine?.x1} y1={linkingLine?.y1}
-                          x2={linkingLine?.x2} y2={linkingLine?.y2} stroke="black"/>
+
+                {tables.length > 0 &&
+                    <g id="diagram" ref={diagramRef}>
+                        {tables.map(item => (
+                            <EditorDBTable
+                                table={item}
+                                key={item.id}
+                                startLinkingHandler={startLinkingMouseDownHandler}
+                                endLinkingHandler={endLinkingMouseUpHandler}
+                                isLinking={isLinking}
+                                diagramMovePosition={diagramMovePosition}
+                            />
+                        ))}
+                        {isLinking &&
+                            <line strokeDasharray="4 4 4"
+                                  x1={linkingLine!.x1} y1={linkingLine!.y1}
+                                  x2={linkingLine!.x2} y2={linkingLine!.y2} stroke="black"/>
+                        }
+                        {relations?.length && relations.map(r => (
+                            <TableRelationship relation={r} key={r.id} />
+                        ))}
+                    </g>
                 }
-                {relations?.length && relations.map(r => (
-                    <TableRelationship relation={r} key={r.id} />
-                ))}
             </svg>
         </div>
     );
