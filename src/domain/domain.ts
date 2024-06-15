@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface ITable {
     id: number,
     tableName: string,
@@ -64,4 +66,23 @@ export interface ISideBarContext {
     openAccordionRelation: (relationId: number | null) => void,
     activeTab: number,
     setActiveTab: (tab: number) => void
+}
+
+interface IPosition {
+    x: number,
+    y: number
+}
+
+export interface IEditAreaContext {
+    startMoveAreaFlag: boolean,
+    setStartMoveAreaFlag: (flag: boolean) => void,
+    diagramMovePosition: IPosition,
+    setDiagramMovePosition: (pos: IPosition) => void,
+    startCursorMovePosition: IPosition,
+    setCursorStartMovePosition: (pos: IPosition) => void,
+    startDiagramPosition: IPosition,
+    setStartDiagramPosition: (pos: IPosition) => void,
+    startMoveArea: (event: React.MouseEvent) => void,
+    moveAreaHandler: (event: React.MouseEvent, diagramRef: React.RefObject<SVGGElement>) => void,
+    endMoveArea: () => void
 }

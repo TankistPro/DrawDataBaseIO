@@ -5,25 +5,15 @@ import {ILinkingLine, linkingTableField} from "../../domain/domain.ts";
 import TableRelationship from "../EditorDBTable/TableRelationship.tsx";
 import {TableContext} from "../../context/TableContext.tsx";
 import {RelationshipContext} from "../../context/RelationshipContext.tsx";
+import {EditAreaContext} from "../../context/EditAreaContext.tsx";
 
 const EditorArea = () => {
     const {tables } = React.useContext(TableContext);
     const {setLinkingLineHandler, linkingLine, createRelationShip, relations, setIsLinking, isLinking } = React.useContext(RelationshipContext);
+    const { startMoveArea, moveAreaHandler, endMoveArea, diagramMovePosition } = React.useContext(EditAreaContext);
 
     const diagramRef = React.useRef<SVGGElement>(null);
-    const [startMoveAreaFlag, setStartMoveAreaFlag] = React.useState<boolean>(false);
-    const [diagramMovePosition, setDiagramMovePosition] = React.useState({
-        x: 0,
-        y: 0
-    })
-    const [startCursorMovePosition, setCursorStartMovePosition] = React.useState({
-        x: 0,
-        y: 0
-    })
-    const [startDiagramPosition, setStartDiagramPosition] = React.useState({
-        x: 0,
-        y: 0
-    })
+
     const startLinkingMouseDownHandler = (event: React.MouseEvent, startField: linkingTableField) => {
         setIsLinking(true);
 
@@ -76,73 +66,12 @@ const EditorArea = () => {
         setLinkingLineHandler(newLinkingLine)
     }
 
-    const startMoveArea = (event: React.MouseEvent) => {
-        const target = event.target;
-
-        if((target as HTMLElement).closest(".custom-table")) {
-            return;
-        }
-
-        setStartMoveAreaFlag(true);
-
-        setCursorStartMovePosition(prevState => {
-            return {
-                ...prevState,
-                x: event.clientX,
-                y: event.clientY
-            }
-        });
-
-        setStartDiagramPosition(prevState => {
-            return {
-                ...prevState,
-                x: diagramMovePosition.x,
-                y: diagramMovePosition.y
-            }
-        })
-
-        // @ts-ignore
-        // document.addEventListener('mousemove', moveAreaHandler);
-
-        document.addEventListener('mouseup', () => {
-            // @ts-ignore
-            document.removeEventListener('mousemove', moveAreaHandler);
-            setStartMoveAreaFlag(false);
-        })
-    }
-    const moveAreaHandler = (event: React.MouseEvent) => {
-        if(!startMoveAreaFlag) return;
-
-        // console.log(event.clientX - startMovePosition.x,event.pageY - startMovePosition.y );
-
-        setDiagramMovePosition(prevState => {
-            return {
-                ...prevState,
-                x: startDiagramPosition.x + event.clientX - startCursorMovePosition.x,
-                y: startDiagramPosition.y + event.clientY - startCursorMovePosition.y
-            }
-        });
-
-        if (!diagramRef || !diagramRef.current) return;
-        diagramRef.current.style.transform = `translate(${ startDiagramPosition.x + (event.clientX - startCursorMovePosition.x) }px, ${  startDiagramPosition.y + (event.clientY - startCursorMovePosition.y) }px)`;
-
-    }
-    const endMoveArea = () => {
-        setStartDiagramPosition(prevState => {
-            return {
-                ...prevState,
-                x: diagramMovePosition.x,
-                y: diagramMovePosition.y
-            }
-        })
-    }
-
     return (
         <div
             className="w-full h-full"
             id='area'
             onMouseDown={startMoveArea}
-            onMouseMove={moveAreaHandler}
+            onMouseMove={(event) => moveAreaHandler(event, diagramRef)}
             onMouseUp={endMoveArea}
         >
             <svg className="w-full h-full">
@@ -182,7 +111,6 @@ const EditorArea = () => {
                                 startLinkingHandler={startLinkingMouseDownHandler}
                                 endLinkingHandler={endLinkingMouseUpHandler}
                                 isLinking={isLinking}
-                                diagramMovePosition={diagramMovePosition}
                             />
                         ))}
                         {isLinking &&

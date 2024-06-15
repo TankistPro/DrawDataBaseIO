@@ -5,25 +5,23 @@ import {TableContext} from "../../context/TableContext.tsx";
 import {RelationshipContext} from "../../context/RelationshipContext.tsx";
 import {SideBarContext} from "../../context/SideBarContext.tsx";
 import TableRow from "./TableRows.tsx";
+import {EditAreaContext} from "../../context/EditAreaContext.tsx";
 
 interface IEditorDbTable {
     table: ITable,
     startLinkingHandler: (event: React.MouseEvent, startField: linkingTableField) => void,
     endLinkingHandler: (endField: linkingTableField) => void,
-    isLinking: boolean,
-    diagramMovePosition: {
-        x: number,
-        y: number
-    }
+    isLinking: boolean
 }
 
-const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, endLinkingHandler, isLinking, diagramMovePosition }) => {
+const EditorDbTable : React.FC<IEditorDbTable> = ({ table, startLinkingHandler, endLinkingHandler, isLinking }) => {
     const refForeignObject = React.useRef<SVGForeignObjectElement>(null);
     const refTable = React.useRef<HTMLDivElement>(null);
 
     const { removeTable, updateTable, setHoveredHandler } = React.useContext(TableContext);
     const { removeRelationShipByTableId } = React.useContext(RelationshipContext);
     const { openAccordionTableID, openAccordionTable } = React.useContext(SideBarContext);
+    const { diagramMovePosition } = React.useContext(EditAreaContext);
 
     const [computedForeignObjectHeight, setComputedForeignObjectHeight] = React.useState<number>(0);
 
