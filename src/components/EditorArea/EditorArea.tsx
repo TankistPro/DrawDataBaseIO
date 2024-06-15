@@ -6,6 +6,7 @@ import TableRelationship from "../EditorDBTable/TableRelationship.tsx";
 import {TableContext} from "../../context/TableContext.tsx";
 import {RelationshipContext} from "../../context/RelationshipContext.tsx";
 import {EditAreaContext} from "../../context/EditAreaContext.tsx";
+// import {useEditAreaScroll} from "../../hooks/useEditAreaScroll.tsx";
 
 const EditorArea = () => {
     const {tables } = React.useContext(TableContext);
@@ -13,6 +14,8 @@ const EditorArea = () => {
     const { startMoveArea, moveAreaHandler, endMoveArea, diagramMovePosition } = React.useContext(EditAreaContext);
 
     const diagramRef = React.useRef<SVGGElement>(null);
+
+    // useEditAreaScroll(diagramRef);
 
     const startLinkingMouseDownHandler = (event: React.MouseEvent, startField: linkingTableField) => {
         setIsLinking(true);
@@ -59,8 +62,8 @@ const EditorArea = () => {
 
         const newLinkingLine: ILinkingLine = {
             ...linkingLine as ILinkingLine,
-            x2: event.pageX - 384 + 5 - diagramMovePosition.x,
-            y2: event.pageY + 5 - diagramMovePosition.y
+            x2: event.clientX - 384 + 5 - diagramMovePosition.x,
+            y2: event.clientY + 5 - diagramMovePosition.y
         };
 
         setLinkingLineHandler(newLinkingLine)
