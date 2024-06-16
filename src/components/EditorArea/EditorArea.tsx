@@ -14,7 +14,7 @@ const EditorArea = () => {
     const { startMoveArea, moveAreaHandler, endMoveArea, diagramMovePosition } = React.useContext(EditAreaContext);
 
     const diagramRef = React.useRef<SVGGElement>(null);
-
+    const editorAreaRef = React.useRef<HTMLDivElement>(null);
     // useEditAreaScroll(diagramRef);
 
     const startLinkingMouseDownHandler = (event: React.MouseEvent, startField: linkingTableField) => {
@@ -69,13 +69,22 @@ const EditorArea = () => {
         setLinkingLineHandler(newLinkingLine)
     }
 
+    const startMoveAreaHandler = (event: React.MouseEvent) => {
+        if(tables.length == 0) return;
+
+        editorAreaRef.current!.style.cursor = "grabbing";
+
+        startMoveArea(event);
+    }
+
     return (
         <div
-            className="w-full h-full"
+            className="w-full h-full cursor-grab"
             id='area'
-            onMouseDown={startMoveArea}
+            onMouseDown={startMoveAreaHandler}
             onMouseMove={(event) => moveAreaHandler(event, diagramRef)}
             onMouseUp={endMoveArea}
+            ref={editorAreaRef}
         >
             <svg className="w-full h-full">
                 <defs>

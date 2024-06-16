@@ -68,9 +68,6 @@ export const EditAreaContextProvider : React.FC<IEditAreaContextProvider> = ({ c
             }
         })
 
-        // @ts-ignore
-        // document.addEventListener('mousemove', moveAreaHandler);
-
         document.addEventListener('mouseup', () => {
             // @ts-ignore
             document.removeEventListener('mousemove', moveAreaHandler);
@@ -79,8 +76,6 @@ export const EditAreaContextProvider : React.FC<IEditAreaContextProvider> = ({ c
     }
     const moveAreaHandler = (event: React.MouseEvent, diagramRef: React.RefObject<SVGGElement>) => {
         if(!startMoveAreaFlag) return;
-
-        // console.log(event.clientX - startMovePosition.x,event.pageY - startMovePosition.y );
 
         setDiagramMovePosition(prevState => {
             return {
