@@ -1,6 +1,7 @@
 import React, {ReactElement} from "react";
 import {ITable, ITableContext} from "../domain/domain.ts";
 import {createBaseTableField} from "../config/db_config.ts";
+import {db} from "../db/db.ts";
 
 interface ITableContextProvider {
     children: ReactElement | JSX.Element[] | JSX.Element;
@@ -14,13 +15,14 @@ export const TableContext = React.createContext<ITableContext>({
     updateTable: () =>{},
     addTableField: () => {},
     setHoveredHandler: () => {},
+    initTableContext: () => {}
 });
 
 export const TableContextProvider: React.FC<ITableContextProvider> = ({ children }) => {
     const [tables, setTables] = React.useState<ITable[]>([]);
     const [hoveredTable, setHoveredTable] = React.useState<ITable | null>(null);
 
-    const addTable = () => {
+    const addTable = async () => {
         const newTables: ITable = {
             id: Date.now(),
             tableName: `Table_${tables.length + 1}`,
@@ -35,15 +37,25 @@ export const TableContextProvider: React.FC<ITableContextProvider> = ({ children
         newTables.fields[0].isNull = false;
         newTables.fields[0].pk = true;
 
-        setTables(prevState => ([...prevState, newTables]))
+        try {
+            await db.diagrams.add(newTables);
+            setTables(prevState => ([...prevState, newTables]));
+        } catch (e) {
+            console.error(e);
+        }
     }
 
-    const removeTable = (tableId: number) => {
+    const removeTable = async (tableId: number) => {
         const updatedTablesState = tables.filter(t => t.id != tableId);
-        setTables(updatedTablesState);
+        try {
+            await db.diagrams.delete(tableId);
+            setTables(updatedTablesState);
+        } catch (e) {
+            console.error(e);
+        }
     }
 
-    const updateTable = (idTable: number, tableEntity: ITable) => {
+    const updateTable = async (idTable: number, tableEntity: ITable) => {
         const indexTable = tables.findIndex((t) => t.id == idTable);
         if(indexTable != -1) {
 
@@ -52,7 +64,13 @@ export const TableContextProvider: React.FC<ITableContextProvider> = ({ children
 
             tables[indexTable] = table;
 
-            setTables([...tables])
+            try {
+                // @ts-ignore
+                await db.diagrams.update(idTable, table);
+                setTables([...tables]);
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
 
@@ -80,6 +98,11 @@ export const TableContextProvider: React.FC<ITableContextProvider> = ({ children
         }
     }
 
+    const initTableContext = async () => {
+        const diagrams = await db.table('diagrams').toArray();
+        setTables(diagrams);
+    }
+
     return (
         <TableContext.Provider value={{
             tables,
@@ -88,7 +111,8 @@ export const TableContextProvider: React.FC<ITableContextProvider> = ({ children
             removeTable,
             updateTable,
             addTableField,
-            setHoveredHandler
+            setHoveredHandler,
+            initTableContext
         }}>
             { children }
         </TableContext.Provider>

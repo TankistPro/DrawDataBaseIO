@@ -46,6 +46,7 @@ export interface ITableContext {
     updateTable: ((idTable: number, tableEntity: ITable) => void),
     addTableField: ((tableId: number) => void),
     setHoveredHandler: ((table: ITable | null) => void),
+    initTableContext: (() => void)
 }
 
 export interface IRelationshipContext {
@@ -56,7 +57,8 @@ export interface IRelationshipContext {
     createRelationShip: ((linkingPayload: ILinkingLine) => void),
     removeRelationShipByTableId: (tableId: number) => void,
     removeRelationShip: (relationId: number) => void,
-    setIsLinking: ((flag: boolean) => void)
+    setIsLinking: ((flag: boolean) => void),
+    initRelationshipContext: (() => void)
 }
 
 export interface ISideBarContext {

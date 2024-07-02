@@ -7,6 +7,7 @@ import { EditAreaContextProvider } from "./context/EditAreaContext.tsx";
 import { RelationshipContextProvider } from "./context/RelationshipContext.tsx";
 
 function App() {
+
   return (
     <main className="bg-sky-50 h-full flex">
         <SideBarContextProvider>

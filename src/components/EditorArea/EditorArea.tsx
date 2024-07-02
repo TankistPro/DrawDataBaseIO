@@ -9,8 +9,8 @@ import {EditAreaContext} from "../../context/EditAreaContext.tsx";
 // import {useEditAreaScroll} from "../../hooks/useEditAreaScroll.tsx";
 
 const EditorArea = () => {
-    const {tables } = React.useContext(TableContext);
-    const {setLinkingLineHandler, linkingLine, createRelationShip, relations, setIsLinking, isLinking } = React.useContext(RelationshipContext);
+    const { tables, initTableContext } = React.useContext(TableContext);
+    const {setLinkingLineHandler, linkingLine, createRelationShip, relations, setIsLinking, isLinking, initRelationshipContext } = React.useContext(RelationshipContext);
     const { startMoveArea, moveAreaHandler, endMoveArea, diagramMovePosition } = React.useContext(EditAreaContext);
 
     const diagramRef = React.useRef<SVGGElement>(null);
@@ -76,6 +76,11 @@ const EditorArea = () => {
 
         startMoveArea(event);
     }
+
+    React.useEffect(() => {
+        initTableContext();
+        initRelationshipContext();
+    }, [])
 
     return (
         <div
